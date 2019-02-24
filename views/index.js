@@ -1,10 +1,8 @@
 // Initialize and add the map
 function initMap() {
-    // The location of Taipei
-    var taipei = { lat: 25.105497, lng: 125.105497 };
-    // The map, centered at Taipei
+    var initLocation = { lat: 25, lng: 135 };
     var map = new google.maps.Map(
-        document.getElementById('map'), { zoom: 4, center: taipei });
+        document.getElementById('map'), { zoom: 2, center: initLocation });
 
     fetchNods(map)
 }
@@ -18,7 +16,7 @@ function fetchNods(map) {
         }).then((nodesJson) => {
             console.log(nodesJson);
 
-            // create content map for each marker, i.e., one maker contains multiple node
+            // create content map for each marker, i.e., one marker contains multiple node
             var contentMap = new Object();
             for (var i = 0; i < nodesJson.length; i++) {
                 var obj = nodesJson[i];
@@ -26,14 +24,14 @@ function fetchNods(map) {
 
                 if (!(key in contentMap)) {
                     // create new entry for the node
-                    contentMap[key] = createMakerContent(obj)
+                    contentMap[key] = createmarkerContent(obj)
                 } else {
                     // append node content to the existing entry
-                    contentMap[key] += createMakerContent(obj)
+                    contentMap[key] += createmarkerContent(obj)
                 }
             }
 
-            // draw makers
+            // draw markers
             for (var i = 0; i < nodesJson.length; i++) {
                 var obj = nodesJson[i];
                 key = obj.lat.toString() + "," + obj.lng.toString();
@@ -43,7 +41,7 @@ function fetchNods(map) {
                     continue
                 }
 
-                // if the status of one of node on the maker is "on", show red flag in map
+                // if the status of one of node on the marker is "on", show red flag in map
                 if (contentMap[key].includes("Status: on")) {
                     iconUrl = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
                 } else {
@@ -51,7 +49,7 @@ function fetchNods(map) {
                     iconUrl = "http://maps.google.com/mapfiles/ms/icons/msmarker.shadow.png";
                 }
 
-                // render makers
+                // render markers
                 var marker = new google.maps.Marker({
                     position: { lat: obj.lat, lng: obj.lng },
                     map: map,
@@ -76,7 +74,7 @@ function bindInfoWindow(marker, map, infowindow, markerContent) {
     });
 }
 
-function createMakerContent(obj) {
+function createmarkerContent(obj) {
     if (obj.height == 0) {
         obj.height = "Unknown"
     }
