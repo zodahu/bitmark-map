@@ -85,9 +85,18 @@ func (ns *Nodes) UpdateNode(n Node) {
 			var nTemp *Node
 			if v := b.Get([]byte(n.PublicKey)); v != nil {
 				nTemp = Deserialize(v)
-				nTemp.Height = n.Height
+
+				// incoming node timestamp cannot be earlier than existing node
+				if n.Timestamp.Before(nTemp.Timestamp) {
+					return nil
+				}
+
+				// because only self node could get height info,
+				// it means 0 is from peer's and don't update
+				if n.Height != 0 {
+					nTemp.Height = n.Height
+				}
 				nTemp.Timestamp = n.Timestamp
-				nTemp.TimeDff = n.TimeDff
 			} else {
 				return nil
 			}
