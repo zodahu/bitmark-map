@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
@@ -52,6 +53,11 @@ func GetNodes(c *gin.Context) {
 		b := tx.Bucket([]byte(nodesTableName))
 		if err := b.ForEach(func(k, v []byte) error {
 			n := Deserialize(v)
+
+			// rewrite timediff corresponding to server time
+			timeDiff := time.Since(n.Timestamp).String()
+			n.TimeDff = timeDiff
+
 			nodesArray = append(nodesArray, *n)
 			return nil
 		}); err != nil {
