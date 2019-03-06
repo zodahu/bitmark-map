@@ -8,7 +8,7 @@ function initMap() {
 }
 
 function fetchNods(map) {
-    fetch('http://34.80.48.90:8080/nodes', {})
+    fetch('http://34.80.60.211:8080/nodes', {})
         .then((response) => {
             // response is a readableStream object,
             // converts response by blob(), json(), text()
